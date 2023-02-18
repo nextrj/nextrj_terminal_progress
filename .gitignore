@@ -1,0 +1,5 @@
+temp
+build
+*.lock
+*.log
+try.ts
