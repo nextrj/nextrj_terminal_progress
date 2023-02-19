@@ -38,7 +38,7 @@
  *   template: "Download ${title} ${value}/${end}=${percent}",
  *   title: "http:/www.example.com/x",
  * }).stepToEnd(100)
- * // every 100 milliseconds step 1 until 123 auto end progress
+ * // every 100 milliseconds step 1 until 200 auto end progress
  * // output `Download http:/www.example.com/x 0/200=0.00%` to `200/200=100.00%`
  * ```
  *
