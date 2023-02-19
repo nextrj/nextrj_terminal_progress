@@ -3,60 +3,63 @@
 /** Terminal progress bar */
 
 export type Options = {
-  value?: number
-  total?: number
+  start?: number
+  end?: number
+  /**
+   * Whether auto end the progress when step to the end.
+   *
+   * True means reset the state to the initial options
+   * when step to the end.
+   *
+   * When invoke the `to(value)` method, and the `value` matches the `end` number,
+   * it call the `end()` method to reset the state to the initial options.
+   */
+  auto?: boolean
+  /**
+   * Whether clear the progress when step to the end number.
+   *
+   * True means remove the last progress content when invoke the `end()` method.
+   */
+  clear?: boolean
 }
+
+export const DEFAULT_INIT_OPTIONS = { start: 0, end: 100, auto: true, clear: false }
 
 /** Use a cache {@link TextEncoder} instance to encode content. */
 const encoder = new TextEncoder()
 const encode = (content: string) => encoder.encode(content)
 
 export class TerminalProgress {
-  value: number
-  total: number
-  /** Indicate wherther progress to the max value. */
+  /** The current value. */
+  #value: number
+  /** The readonly current value. */
+  get value(): number {
+    return this.#value
+  }
+  /** The initial options. */
+  options: Required<Options>
+  /** Whether stepped to the end. */
   get completed(): boolean {
-    return this.value >= this.total
+    return this.#value >= this.options.end
   }
-  /** The Previous rendered content. */
+  /** The previous rendered content. */
   #lastContent?: string
-  /** The default options get from constructor. */
-  #defaultOptions: {
-    value: number
-    total: number
+  /** Instance with {@link DEFAULT_INIT_OPTIONS}. */
+  constructor(options?: Options) {
+    this.options = Object.assign({}, DEFAULT_INIT_OPTIONS, options)
+    this.#value = this.options.start
   }
   /**
-   * Instance a TerminalProgress.
-   * > Notes: The `number` argument is used to set the {@link TerminalProgress.value} property.
-   */
-  constructor(options?: Options | number) {
-    // initial properties
-    if (typeof options === "number") {
-      this.value = Math.max(0, options)
-      this.total = 100
-    } else if (typeof options === "undefined") {
-      this.value = 0
-      this.total = 100
-    } else throw Error("Not implements yet.")
-
-    // keep the default state
-    this.#defaultOptions = {
-      value: this.value,
-      total: this.total,
-    }
-  }
-  /**
-   * Step to the specific {@link TerminalProgress.value} property or {@link Options}.
+   * Step to the specific {@link value}.
    *
-   * > Notes: The `number` argument is used to set the {@link TerminalProgress.value} property.
+   * When invoke this method, and the {@link value} argument matches the `end` number,
+   * it call the `end()` method to reset the state to the initial options.
    */
-  to(options: Options | number): TerminalProgress {
-    if (typeof options === "number") {
-      this.value = Math.min(this.total, options)
-    } else throw Error("Not implements")
+  to(value: number): TerminalProgress {
+    this.#value = value
 
     // generate the content
-    const content = `${this.value}/${this.total}`
+    const content = this.#generateContent()
 
     // only render when content changed
     if (this.#lastContent !== content) {
@@ -67,23 +70,22 @@ export class TerminalProgress {
       // 3. `\x1b[0K` - clear from the content tail to the right edge
       Deno.stdout.writeSync(encode(`\r${content}\x1b[?25l\x1b[0K`))
     }
+
+    // auto finish
+    if (this.completed && this.options.auto) this.end()
+
     return this
   }
-  /**
-   * End the progress-bar with the current state then reset to default state.
-   *
-   * @param keepState Whether keep the last rendered content. Default true.
-   */
-  end(keepState = true): TerminalProgress {
-    // end with current state
-    if (keepState) {
-      // keep the last content. Add break line and then show cursor.
+  /** End the progress and reset the state to the initial options. */
+  end(): TerminalProgress {
+    if (!this.options.clear) {
+      // keep the last content, add break line and then show cursor.
       // 1. `\n` - break line
       // 2. `\r` - move cursor to left edge
       // 3. `\x1b[?25h` - show cursor (h-height bit, l-low bit)
       Deno.stdout.writeSync(encode(`\n\r\x1b[?25h`))
     } else {
-      // clear content and show cursor.
+      // clear the last content and show cursor.
       // 1. `\x1b[2K` - clear content from left edge to right edge
       // 2. `\r` - move cursor to left edge
       // 3. `\x1b[?25h` - show cursor (h-height bit, l-low bit)
@@ -93,15 +95,41 @@ export class TerminalProgress {
     // reset to default state
     return this.#reset()
   }
-  /** Reset to default state */
+  /** Reset the state to the initial options. */
   #reset(): TerminalProgress {
-    // reset to default value
-    this.value = this.#defaultOptions.value
-    this.total = this.#defaultOptions.total
+    // reset to start value
+    this.#value = this.options.start
 
     // clear last content
     this.#lastContent = undefined
 
     return this
+  }
+  /** Generate the content by the current state. */
+  #generateContent(): string {
+    return `${this.#value}/${this.options.end}`
+  }
+  /**
+   * Step by step to the end with the specific {@link delay} milliseconds.
+   *
+   * Default {@link delay} value is 100.
+   *
+   * This convenience async method is use for a time-base-progress.
+   * It call `to(value)` method every {@link delay} milliseconds until to the end.
+   */
+  stepToEnd(delay = 100, step = 1): Promise<void> {
+    return new Promise((resolve) => {
+      this.to(0)
+      let count = 0
+      const intervalId = setInterval(() => {
+        count = count + step
+        this.to(count)
+        if (count >= this.options.end) {
+          clearInterval(intervalId)
+          if (!this.options.auto) this.end()
+          resolve()
+        }
+      }, delay)
+    })
   }
 }
