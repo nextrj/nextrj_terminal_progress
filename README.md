@@ -32,3 +32,18 @@ for await (const [index, _] of Array.from({ length: 123 }).entries()) {
 // every 100 milliseconds step 1 until 123 auto end progress
 // output `0/123` to `123/123`
 ```
+
+Example 3: with title, percent, value and end
+
+```ts
+import { TerminalProgress } from "https://deno.land/x/nextrj_terminal_progress@$VERSION/mod.ts"
+
+await new TerminalProgress({
+  start: 0,
+  end: 200,
+  template: "Downloading ${title} ${value}/${end}=${percent}",
+  title: "http:/www.example.com/x",
+}).stepToEnd(100)
+// every 100 milliseconds step 1 until 123 auto end progress
+// output `Download http:/www.example.com/x 0/200=0.00%` to `200/200=100.00%`
+```
