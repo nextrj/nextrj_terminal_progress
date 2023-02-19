@@ -1,7 +1,7 @@
 // Copyright 2023 the NextRJ organization. All rights reserved. MIT license.
+import { format } from "./deps.ts"
 
-/** Terminal progress bar */
-
+/** Initial options */
 export type Options = {
   start?: number
   end?: number
@@ -21,9 +21,29 @@ export type Options = {
    * True means remove the last progress content when invoke the `end()` method.
    */
   clear?: boolean
+  /** The progress title. */
+  title?: string
+  /**
+   * Custom template for the progress content.
+   *
+   * Use key work `value, end, percent, title, bar` to generate the template, such as:
+   * 1. `"${value}/${end}"` - the default template, such as `"50/100"`.
+   * 2. `"${title} ${pencent} (${value}/${end})"`, such as `"Downloading http://www.example.com 50.00% (50/100)""`.
+   */
+  template?: string
+  /** The percent precision. Default 0. */
+  percentPrecision?: number
 }
 
-export const DEFAULT_INIT_OPTIONS = { start: 0, end: 100, auto: true, clear: false }
+export const DEFAULT_INIT_OPTIONS = {
+  start: 0,
+  end: 100,
+  auto: true,
+  clear: false,
+  title: "",
+  template: "${value}/${end}",
+  percentPrecision: 0,
+}
 
 /** Use a cache {@link TextEncoder} instance to encode content. */
 const encoder = new TextEncoder()
@@ -38,6 +58,10 @@ export class TerminalProgress {
   }
   /** The initial options. */
   options: Required<Options>
+  /** Dynamic set the title. */
+  set title(newTitle: string) {
+    this.options.title = newTitle
+  }
   /** Whether stepped to the end. */
   get completed(): boolean {
     return this.#value >= this.options.end
@@ -107,7 +131,13 @@ export class TerminalProgress {
   }
   /** Generate the content by the current state. */
   #generateContent(): string {
-    return `${this.#value}/${this.options.end}`
+    // return `${this.#value}/${this.options.end}`
+    return format(this.options.template, {
+      value: this.#value,
+      end: this.options.end,
+      title: this.options.title,
+      percent: (this.#value / this.options.end).toFixed(this.options.percentPrecision),
+    })
   }
   /**
    * Step by step to the end with the specific {@link delay} milliseconds.
