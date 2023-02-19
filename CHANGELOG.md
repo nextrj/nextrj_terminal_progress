@@ -1,9 +1,14 @@
 # NextRJ Terminal Progress Changelog
 
+## 2023-02-19 0.0.4
+
+- Fixed percent error.
+- Add `example/complex.ts`.
+
 ## 2023-02-19 0.0.3
 
 - Support template key `value`, `end`, `percent`, `title`.
-  > Default `"${value}/${end}"`
+  > Default `"${value}/${end}"`.
 
 ## 2023-02-19 0.0.2
 
@@ -12,5 +17,5 @@
 
 ## 2023-02-18 0.0.1
 
-- Implement a super simple progress
-  > Just show `value/total`
+- Implement a super simple progress.
+  > Just show `value/total`.
