@@ -31,7 +31,7 @@ export type Options = {
    * 2. `"${title} ${pencent} (${value}/${end})"`, such as `"Downloading http://www.example.com 50.00% (50/100)""`.
    */
   template?: string
-  /** The percent precision. Default 0. */
+  /** The percent precision. Default 2. */
   percentPrecision?: number
 }
 
@@ -42,7 +42,7 @@ export const DEFAULT_INIT_OPTIONS = {
   clear: false,
   title: "",
   template: "${value}/${end}",
-  percentPrecision: 0,
+  percentPrecision: 2,
 }
 
 /** Use a cache {@link TextEncoder} instance to encode content. */
@@ -136,7 +136,7 @@ export class TerminalProgress {
       value: this.#value,
       end: this.options.end,
       title: this.options.title,
-      percent: (this.#value / this.options.end).toFixed(this.options.percentPrecision),
+      percent: (this.#value / this.options.end * 100).toFixed(this.options.percentPrecision) + "%",
     })
   }
   /**
