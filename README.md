@@ -10,7 +10,7 @@ A terminal progress.
 Example1: a simple time-base-progress - every 100 milliseconds step 1 until to 100
 
 ```ts
-import { TerminalProgress } from "https://deno.land/x/nextrj_terminnal_progress@$VERSION/mod.ts"
+import { TerminalProgress } from "https://deno.land/x/nextrj_terminal_progress@$VERSION/mod.ts"
 
 await new TerminalProgress().stepToEnd(100)
 // console should log `0/100` to `100/100`
@@ -19,7 +19,7 @@ await new TerminalProgress().stepToEnd(100)
 Example2: manual control the step
 
 ```ts
-import { TerminalProgress } from "https://deno.land/x/nextrj_terminnal_progress@$VERSION/mod.ts"
+import { TerminalProgress } from "https://deno.land/x/nextrj_terminal_progress@$VERSION/mod.ts"
 import { delay } from "https://deno.land/std@$STD_VERSION/async/mod.ts"
 
 const progress = new TerminalProgress({ start: 0, total: 123, auto: true, clear: false })
