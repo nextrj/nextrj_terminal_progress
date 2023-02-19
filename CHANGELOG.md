@@ -1,5 +1,10 @@
 # NextRJ Terminal Progress Changelog
 
+## 2023-02-19 0.0.3
+
+- Support template key `value`, `end`, `percent`, `title`.
+  > Default `"${value}/${end}"`
+
 ## 2023-02-19 0.0.2
 
 - Totally refactor to new structure.
