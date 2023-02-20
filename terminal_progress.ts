@@ -31,6 +31,12 @@ export type Options = {
    * 2. `"${title} ${pencent} (${value}/${end})"`, such as `"Downloading http://www.example.com 50.00% (50/100)""`.
    */
   template?: string
+  /**
+   * Declare some extra key that can bu use in the template.
+   *
+   * Its value can be any type such as function or object depends on how to use in the template.
+   */
+  extra?: Record<string, unknown>
   /** The percent precision. Default 2. */
   percentPrecision?: number
 }
@@ -42,6 +48,7 @@ export const DEFAULT_INIT_OPTIONS = {
   clear: false,
   title: "",
   template: "${value}/${end}",
+  extra: {},
   percentPrecision: 2,
 }
 
@@ -137,6 +144,7 @@ export class TerminalProgress {
       end: this.options.end,
       title: this.options.title,
       percent: (this.#value / this.options.end * 100).toFixed(this.options.percentPrecision) + "%",
+      ...this.options.extra,
     })
   }
   /**
