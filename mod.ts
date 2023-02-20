@@ -9,6 +9,7 @@
  * import { TerminalProgress } from "https://deno.land/x/nextrj_terminal_progress@$VERSION/mod.ts"
  *
  * await new TerminalProgress().stepToEnd(100)
+ * // every 100 milliseconds step 1 until 100 auto end progress
  * // output `0/100` step to `100/100`
  * ```
  *
@@ -23,7 +24,6 @@
  *   await delay(100)
  *   progress.to(index + 1)
  * }
- * // every 100 milliseconds step 1 until 123 auto end progress
  * // output `0/123` step to `123/123`
  * ```
  *
@@ -38,8 +38,33 @@
  *   template: "Download ${title} ${value}/${end}=${percent}",
  *   title: "http:/www.example.com/x",
  * }).stepToEnd(100)
- * // every 100 milliseconds step 1 until 200 auto end progress
  * // output `Download http:/www.example.com/x 0/200=0.00%` to `200/200=100.00%`
+ * ```
+ *
+ * Example 4: color the output text
+ *
+ * ```ts
+ * import { TerminalProgress } from "https://deno.land/x/nextrj_terminal_progress@$VERSION/mod.ts"
+ *
+ * await new TerminalProgress({
+ *   start: 0,
+ *   end: 200,
+ *   template: "${c.green(percent)}",
+ * }).stepToEnd(100)
+ * // output like `50%` with green color
+ * ```
+ *
+ * Example 5: add extra template key
+ *
+ * ```ts
+ * import { TerminalProgress } from "https://deno.land/x/nextrj_terminal_progress@$VERSION/mod.ts"
+ *
+ * const step = (value: number, end: number) => `[${value}/${end}]`
+ * new TerminalProgress({
+ *   extra: { step },
+ *   template: "${step(value, end)}",
+ * }).stepToEnd(100)
+ * // output like `[50/100]`
  * ```
  *
  * @module

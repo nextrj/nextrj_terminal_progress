@@ -2,9 +2,10 @@
 
 A terminal progress.
 
-> Support template key `value`, `end`, `percent`, `title`.
+1. Support inner template key `value`, `end`, `percent`, `title`, `c`.
+2. Support add extra template key.
 
-> TODO: support template key `bar`.
+> TODO: support template key `bar` and `duration`.
 
 ## Usage
 
@@ -14,6 +15,7 @@ Example 1: a simple time-base-progress - every 100 milliseconds step 1 until to 
 import { TerminalProgress } from "https://deno.land/x/nextrj_terminal_progress@$VERSION/mod.ts"
 
 await new TerminalProgress().stepToEnd(100)
+// every 100 milliseconds step 1 until 100 auto end progress
 // output `0/100` to `100/100`
 ```
 
@@ -29,7 +31,6 @@ for await (const [index, _] of Array.from({ length: 123 }).entries()) {
   await delay(100)
   progress.to(index + 1)
 }
-// every 100 milliseconds step 1 until 123 auto end progress
 // output `0/123` to `123/123`
 ```
 
@@ -44,6 +45,31 @@ await new TerminalProgress({
   template: "Downloading ${title} ${value}/${end}=${percent}",
   title: "http:/www.example.com/x",
 }).stepToEnd(100)
-// every 100 milliseconds step 1 until 200 auto end progress
 // output `Download http:/www.example.com/x 0/200=0.00%` to `200/200=100.00%`
+```
+
+Example 4: color the output text
+
+```ts
+import { TerminalProgress } from "https://deno.land/x/nextrj_terminal_progress@$VERSION/mod.ts"
+
+await new TerminalProgress({
+  start: 0,
+  end: 200,
+  template: "${c.green(percent)}",
+}).stepToEnd(100)
+// output like `50%` with green color
+```
+
+Example 5: add extra template key
+
+```ts
+import { TerminalProgress } from "https://deno.land/x/nextrj_terminal_progress@$VERSION/mod.ts"
+
+const step = (value: number, end: number) => `[${value}/${end}]`
+new TerminalProgress({
+  extra: { step },
+  template: "${step(value, end)}",
+}).stepToEnd(100)
+// output like `[50/100]`
 ```
