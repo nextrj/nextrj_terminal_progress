@@ -6,6 +6,6 @@ await new TerminalProgress({
   start: 0,
   end: 200,
   extra: { step },
-  template: "Download ${title} ${value}/${end}=${percent} ${step(value, end)}",
+  template: "${c.green(percent)} Download ${title} (${value}/${end}) ${step(value, end)}",
   title: "http:/www.example.com/x",
 }).stepToEnd(100)

@@ -1,5 +1,5 @@
 // Copyright 2023 the NextRJ organization. All rights reserved. MIT license.
-import { format } from "./deps.ts"
+import { colors, format } from "./deps.ts"
 
 /** Initial options */
 export type Options = {
@@ -29,12 +29,17 @@ export type Options = {
    * Use key work `value, end, percent, title, bar` to generate the template, such as:
    * 1. `"${value}/${end}"` - the default template, such as `"50/100"`.
    * 2. `"${title} ${pencent} (${value}/${end})"`, such as `"Downloading http://www.example.com 50.00% (50/100)""`.
+   * 3. Use inner key `c` to color the text, such as `"${c.green(pencent)}"`
    */
   template?: string
   /**
    * Declare some extra key that can bu use in the template.
    *
    * Its value can be any type such as function or object depends on how to use in the template.
+   * There has a inner extra key `c` can be used, it is equals to:
+   * ```ts
+   * import * as c from "https://deno.land/std/fmt/colors.ts"
+   * ```
    */
   extra?: Record<string, unknown>
   /** The percent precision. Default 2. */
@@ -78,6 +83,10 @@ export class TerminalProgress {
   /** Instance with {@link DEFAULT_INIT_OPTIONS}. */
   constructor(options?: Options) {
     this.options = Object.assign({}, DEFAULT_INIT_OPTIONS, options)
+
+    // add inner extra key `c`
+    Object.assign(this.options.extra, { c: colors })
+
     this.#value = this.options.start
   }
   /**
