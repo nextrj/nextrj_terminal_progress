@@ -2,10 +2,10 @@
 
 A terminal progress.
 
-1. Support inner template key `value`, `end`, `percent`, `title`, `c`.
+1. Support inner template key `value`, `end`, `percent`, `duration`, `title`, `c`.
 2. Support add extra template key.
 
-> TODO: support template key `bar` and `duration`.
+> TODO: support template key `bar`.
 
 ## Usage
 
@@ -34,7 +34,7 @@ for await (const [index, _] of Array.from({ length: 123 }).entries()) {
 // output `0/123` to `123/123`
 ```
 
-Example 3: with title, percent, value and end
+Example 3: with title, percent, value, end and duration
 
 ```ts
 import { TerminalProgress } from "https://deno.land/x/nextrj_terminal_progress@$VERSION/mod.ts"
@@ -42,10 +42,10 @@ import { TerminalProgress } from "https://deno.land/x/nextrj_terminal_progress@$
 await new TerminalProgress({
   start: 0,
   end: 200,
-  template: "Downloading ${title} ${value}/${end}=${percent}",
+  template: "Downloading ${title} ${value}/${end}=${percent} ${duration}",
   title: "http:/www.example.com/x",
 }).stepToEnd(100)
-// output `Download http:/www.example.com/x 0/200=0.00%` to `200/200=100.00%`
+// output like `Download http:/www.example.com/x 0/200=0.00% 01:30`
 ```
 
 Example 4: color the output text

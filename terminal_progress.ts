@@ -1,5 +1,5 @@
 // Copyright 2023 the NextRJ organization. All rights reserved. MIT license.
-import { colors, format } from "./deps.ts"
+import { colors, formatDuration, formatTemplate } from "./deps.ts"
 
 /** Initial options */
 export type Options = {
@@ -62,6 +62,8 @@ const encoder = new TextEncoder()
 const encode = (content: string) => encoder.encode(content)
 
 export class TerminalProgress {
+  /** the start time */
+  #startTime: Date
   /** The current value. */
   #value: number
   /** The readonly current value. */
@@ -88,6 +90,12 @@ export class TerminalProgress {
     Object.assign(this.options.extra, { c: colors })
 
     this.#value = this.options.start
+    this.#startTime = new Date()
+  }
+  /** Start the progress*/
+  start(): TerminalProgress {
+    this.#startTime = new Date()
+    return this
   }
   /**
    * Step to the specific {@link value}.
@@ -148,11 +156,12 @@ export class TerminalProgress {
   /** Generate the content by the current state. */
   #generateContent(): string {
     // return `${this.#value}/${this.options.end}`
-    return format(this.options.template, {
+    return formatTemplate(this.options.template, {
       value: this.#value,
       end: this.options.end,
       title: this.options.title,
       percent: (this.#value / this.options.end * 100).toFixed(this.options.percentPrecision) + "%",
+      duration: formatDuration((Date.now() - this.#startTime.getTime()) / 1000),
       ...this.options.extra,
     })
   }
