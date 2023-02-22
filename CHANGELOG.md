@@ -1,5 +1,15 @@
 # NextRJ Terminal Progress Changelog
 
+## 2023-02-22 0.2.0
+
+- Support template key `duration`, such as:
+  ```ts
+  new TerminalProgress({
+    template: "${duration}",
+  }).stepToEnd(100)
+  // output like `01:30`
+  ```
+
 ## 2023-02-21 0.1.0
 
 - Support add extra template key, such as:
