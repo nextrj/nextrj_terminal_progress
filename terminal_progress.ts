@@ -1,4 +1,11 @@
 // Copyright 2023 the NextRJ organization. All rights reserved. MIT license.
+
+/**
+ * A full customisable terminal progress bar.
+ *
+ * @module
+ */
+
 import { colors, formatDuration, formatTemplate } from "./deps.ts"
 
 /** Initial options */
