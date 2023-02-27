@@ -104,7 +104,7 @@ export class TerminalProgress {
    * it call the `end()` method to reset the state to the initial options.
    */
   to(value: number): TerminalProgress {
-    this.#value = value
+    this.#value = Math.min(value, this.options.end)
 
     // generate the content
     const content = this.#generateContent()
