@@ -97,7 +97,7 @@ for await (const [index, _] of Array.from({ length: 101 }).entries()) {
 }
 ```
 
-- Output like `"00:00 0/123 0%"` to `"01:10 123/123 100%"`
+- Output like `"00:00 0/100 0%"` to `"01:10 100/100 100%"`
 
 ![](./assets/example2.gif)
 
