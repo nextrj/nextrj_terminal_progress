@@ -1,5 +1,9 @@
 # NextRJ Terminal Progress Changelog
 
+## 2023-02-28 0.3.1
+
+- Polishing README
+
 ## 2023-02-28 0.3.0
 
 - Control max to 100%.
