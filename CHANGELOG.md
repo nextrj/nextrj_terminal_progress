@@ -1,5 +1,13 @@
 # NextRJ Terminal Progress Changelog
 
+## 2023-02-28 0.3.0
+
+- Control max to 100%.
+- Polishing document and examples
+  > Add gif to README.
+
+![](./assets/example3.gif)
+
 ## 2023-02-22 0.2.0
 
 - Support template key `duration`, such as:
