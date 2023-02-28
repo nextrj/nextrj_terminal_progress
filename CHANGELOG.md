@@ -1,5 +1,9 @@
 # NextRJ Terminal Progress Changelog
 
+## 2023-02-28 0.3.2
+
+- Align deps version.
+
 ## 2023-02-28 0.3.1
 
 - Polishing README
