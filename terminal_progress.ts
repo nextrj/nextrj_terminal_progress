@@ -110,8 +110,9 @@ export class TerminalProgress {
    * When invoke this method, and the {@link value} argument matches the `end` number,
    * it call the `end()` method to reset the state to the initial options.
    */
-  to(value: number): TerminalProgress {
-    this.#value = Math.min(value, this.options.end)
+  to(value?: number): TerminalProgress {
+    if (typeof (value) === "undefined") value = this.#value
+    else this.#value = Math.min(value, this.options.end)
 
     // generate the content
     const content = this.#generateContent()
