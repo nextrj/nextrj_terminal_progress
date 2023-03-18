@@ -1,5 +1,10 @@
 # NextRJ Terminal Progress Changelog
 
+## 2023-03-18 0.5.0
+
+- Make argument value of `TerminalProgress.to(value?: number)` optional.
+  > Call `.to()` without value to rerender.
+
 ## 2023-03-16 0.4.0
 
 - Upgrade to deno/std@0.180.0
