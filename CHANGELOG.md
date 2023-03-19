@@ -1,5 +1,9 @@
 # NextRJ Terminal Progress Changelog
 
+## 2023-03-19 0.5.1
+
+- Upgrade to `nextrj_utils@0.6.4`
+
 ## 2023-03-18 0.5.0
 
 - Make argument value of `TerminalProgress.to(value?: number)` optional.
